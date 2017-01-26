@@ -1,4 +1,4 @@
-# AgeFromName 0.0.1
+# AgeFromName 0.0.1.1
 A tool for predicting someone's age or generation given their name and assigned sex at birth, 
 assuming they were born in the US.
 
@@ -71,6 +71,8 @@ year_of_birth
 
 Finally, we can see similar information for generations, as well, using the GenerationFromName class.
 ```pydocstring
+>>> from agefromname import GenerationFromName
+>>> generation_from_name = GenerationFromName()
 >>> generation_from_name.get_mle('barack', 'm')
 'Generation Z'
 >>> generation_from_name.get_mle('ashley', 'f')
