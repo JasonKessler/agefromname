@@ -1,4 +1,6 @@
 # AgeFromName 0.0.1
+
+[![Join the chat at https://gitter.im/agefromname/Lobby](https://badges.gitter.im/agefromname/Lobby.svg)](https://gitter.im/agefromname/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 A tool for predicting someone's age or generation given their name and assigned sex at birth, 
 assuming they were born in the US.
 
