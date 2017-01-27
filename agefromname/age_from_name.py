@@ -23,11 +23,16 @@ class AgeFromName(object):
 	def _get_data_path(self, file_name):
 		return os.path.join(os.path.dirname(__file__), 'data', file_name)
 
-	def get_estimated_counts(self, first_name, sex, current_year=datetime.now().year):
+	def get_estimated_counts(self,
+	                         first_name,
+	                         sex,
+	                         current_year=datetime.now().year,
+	                         minimum_age=0):
 		'''
 		:param first_name: str, First name
 		:param sex: str, m or f for sex
 		:param current_year: int, optional, defaults to current year
+		:param minimum_age: int, optional, defaults to 0
 		:return: pd.Series, with int indices indicating years of
 			birth, and estimated counts of total population with that name and birth year
 		'''
@@ -35,7 +40,7 @@ class AgeFromName(object):
 		sex = sex.lower()
 		cur_df = (self._year_of_birth_df[(self._year_of_birth_df.first_name == first_name)
 		                                 & (self._year_of_birth_df.sex == sex)
-		                                 & (self._year_of_birth_df.year_of_birth <= current_year)]
+		                                 & (self._year_of_birth_df.year_of_birth <= (current_year - minimum_age))]
 		          [['year_of_birth', 'count']])
 		year_stats = (self._mortality_df[self._mortality_df.as_of_year == current_year]
 		              [['year_of_birth', sex + '_prob_alive']])
@@ -45,25 +50,31 @@ class AgeFromName(object):
 		cur_df['estimated_count'] = cur_df['prob_alive'] * cur_df['count']
 		return cur_df.set_index('year_of_birth')['estimated_count']
 
-	def get_mle(self, first_name, sex, current_year=datetime.now().year):
+	def argmax(self, first_name, sex, current_year=datetime.now().year, minimum_age=0):
 		'''
 		:param first_name: str, First name
 		:param sex: str, m or f for sex
 		:param current_year: int, optional, defaults to current year
+		:param minimum_age: int, optional, defaults to 0
 		:return: int, the most likely year of birth
 		'''
-		return self.get_estimated_counts(first_name, sex, current_year).argmax()
+		return self.get_estimated_counts(first_name, sex, current_year, minimum_age).argmax()
 
-	def get_estimated_distribution(self, first_name, sex, current_year=datetime.now().year):
+	def get_estimated_distribution(self,
+	                               first_name,
+	                               sex,
+	                               current_year=datetime.now().year,
+	                               minimum_age=0):
 		'''
 		:param first_name: str, First name
 		:param sex: str, m or f for sex
 		:param current_year: int, optional, defaults to current year
+		:param minimum_age: int, optional, defaults to 0
 		:return: pd.Series, with int indices indicating years of
 			birth, and the estimated percentage of the total population of people who share sex and
 			first name who were born that year.
 		'''
-		age_counts = self.get_estimated_counts(first_name, sex, current_year)
+		age_counts = self.get_estimated_counts(first_name, sex, current_year, minimum_age)
 		to_ret = age_counts / age_counts.sum()
 		to_ret.name = 'estimate_percentage'
 		return to_ret

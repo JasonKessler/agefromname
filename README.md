@@ -1,4 +1,4 @@
-# AgeFromName 0.0.1.1
+# AgeFromName 0.0.2
 A tool for predicting someone's age or generation given their name and assigned sex at birth, 
 assuming they were born in the US.
 
@@ -21,35 +21,42 @@ Administration's [Life Tables for the United States Social Security Area 1900-21
 
 To use, first initialize the finder
 
-```pydocstring
+```pythonstub
 >>> from agefromname import AgeFromName
 >>> age_from_name = AgeFromName()
 ```
 
-Now you can use this to get the maximum likelihood estimate of someone's age, give their first name and 
+Now you can use this to get the mode of someone's age, give their first name and 
 gender.  Note that their gender should be a single letter, 'm' or 'f' (case-insensitive), and that the
   first name is case-insensitive as well.
   
-```pydocstring
->>> age_from_name.get_mle('jAsOn', 'm')
+```pythonstub
+>>> age_from_name.argmax('jAsOn', 'm')
 1977
->>> age_from_name.get_mle('Jason', 'M')
+>>> age_from_name.argmax('Jason', 'M')
 1977
 ```
 
-You can also include find the MLE after as of a particular year.  Note that if omitted, the current
-year is used.
+You can also include an "as-of" year.  For example, in 1980, the argmax year for "John" was 1947, while in 2000 it was 1964.  Note that if omitted, the current year is used.
 
-```pydocstring
->>> age_from_name.get_mle('john', 'm', 1980)
-1947
->>> age_from_name.get_mle('john', 'm', 2000)
+```pythonstub
+>>> age_from_name.argmax('john', 'm', 2000)
 1964
+>>> age_from_name.argmax('john', 'm', 1980)
+1947
+```
+
+Furthermore, you can exclude people who are younger than a particular age.  
+```pythonstub
+>>> age_from_name.argmax('bill', 'm', 1980, minimum_age=40)
+1934
+>>> age_from_name.argmax('bill', 'm', minimum_age=40)
+1959
 ```
 
 Getting estimated counts of living people with a giving name and gender at a particular date is easy, 
 and given in a Pandas Series.
-```pydocstring
+```pythonstub
 >>> age_from_name.get_estimated_counts('john', 'm', 1960)
 year_of_birth
 1881     4613.792420
@@ -60,7 +67,7 @@ year_of_birth
 
 We can see corresponding probability distribution using
 
-```pydocstring
+```pythonstub
 >>> age_from_name.get_estimated_distribution('mary', 'f', 1910)
 year_of_birth
 1881    0.016531
@@ -70,19 +77,19 @@ year_of_birth
 ```
 
 Finally, we can see similar information for generations, as well, using the GenerationFromName class.
-```pydocstring
+```pythonstub
 >>> from agefromname import GenerationFromName
 >>> generation_from_name = GenerationFromName()
->>> generation_from_name.get_mle('barack', 'm')
+>>> generation_from_name.argmax('barack', 'm')
 'Generation Z'
->>> generation_from_name.get_mle('ashley', 'f')
+>>> generation_from_name.argmax('ashley', 'f')
 'Millenials'
->>> generation_from_name.get_mle('monica', 'f')
+>>> generation_from_name.argmax('monica', 'f')
 'Generation X'
->>> generation_from_name.get_mle('bill', 'm')
+>>> generation_from_name.argmax('bill', 'm')
 'Baby Boomers
->>> generation_from_name.get_mle('bill', 'f')
-'Greatest Generation'
+>>> generation_from_name.argmax('wilma', 'f')
+'Silent'
 >>> generation_from_name.get_estimated_distribution('jaden', 'm')
 Baby Boomers           0.000000
 Generation X           0.001044

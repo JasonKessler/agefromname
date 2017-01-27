@@ -1,5 +1,7 @@
 from datetime import datetime
+
 import pandas as pd
+
 from agefromname import AgeFromName
 
 
@@ -9,11 +11,13 @@ class InvalidGenerationBirthYearDefinition(Exception):
 
 class GenerationFromName(object):
 	def __init__(self,
-	             generation_birth_years={'Greatest Generation': [1930, 1945],
+	             generation_birth_years={'Greatest': [1915, 1929],
+	                                     'Silent': [1930, 1945],
 	                                     'Baby Boomers': [1946, 1964],
 	                                     'Generation X': [1965, 1980],
-	                                     'Millenials': [1981, 2000],
-	                                     'Generation Z': [2001, 2020]},
+	                                     'Millenials': [1981, 1995],
+	                                     'Generation Z': [1996, 2010],
+	                                     'Post Gen Z': [2011, 2025]},
 	             age_from_name=None):
 		'''
 		:param generation_birth_years: dict, maps generation names to the first and
@@ -44,43 +48,52 @@ class GenerationFromName(object):
 			if ordered_ranges[i - 1][1] >= ordered_ranges[i][0]:
 				raise InvalidGenerationBirthYearDefinition(
 					"Values in generation_birth_years non overlapping. %s and %s overlap." % (
-					ordered_ranges[i - 1], ordered_ranges[i]))
+						ordered_ranges[i - 1], ordered_ranges[i]))
 
-	def get_estimated_counts(self, first_name, sex, current_year=datetime.now().year):
+	def get_estimated_counts(self, first_name, sex, current_year=datetime.now().year, minimum_age=0):
 		'''
 		:param first_name: str, First name
 		:param sex: str, m or f for sex
 		:param current_year: int, optional, defaults to current year
+		:param minimum_age: int, optional, defaults to 0
 		:return: pd.Series, with int indices indicating years of
 			birth, and estimated counts of total population with that name and generation
 		'''
-		year_counts = self._age_from_name.get_estimated_counts(first_name, sex, current_year)
+		year_counts = self._age_from_name.get_estimated_counts(first_name,
+		                                                       sex,
+		                                                       current_year,
+		                                                       minimum_age)
 		to_ret = self._generational_rollup(year_counts)
 		to_ret.name = 'estimated_count'
 		return to_ret
 
-	def get_estimated_distribution(self, first_name, sex, current_year=datetime.now().year):
+	def get_estimated_distribution(self, first_name, sex,
+	                               current_year=datetime.now().year,
+	                               minimum_age=0):
 		'''
 		:param first_name: str, First name
 		:param sex: str, m or f for sex
 		:param current_year: int, optional, defaults to current year
+		:param minimum_age: int, optional, defaults to 0
 		:return: pd.Series, nd the estimated percentage of the total population of
 		people who share sex andfirst name who were born that generation.
 		'''
-		to_ret = self._generational_rollup(self._age_from_name.get_estimated_distribution(first_name, sex, current_year))
+		to_ret = self._generational_rollup(self._age_from_name.get_estimated_distribution
+		                                   (first_name, sex, current_year, minimum_age))
 		to_ret.name = 'estimate_percentage'
 		return to_ret
 
-	def get_mle(self, first_name, sex, current_year=datetime.now().year):
+	def argmax(self, first_name, sex, current_year=datetime.now().year, minimum_age=0):
 		'''
 		:param first_name: str, First name
 		:param sex: str, m or f for sex
 		:param current_year: int, optional, defaults to current year
+		:param minimum_age: int, optional, defaults to 0
 		:return: pd.Series, nd the estimated percentage of the total population of
 		people who share sex andfirst name who were born that generation.
 		'''
-		return self.get_estimated_distribution(first_name, sex, current_year).argmax()
-
+		return self.get_estimated_distribution(first_name, sex,
+		                                       current_year, minimum_age).argmax()
 
 	def _generational_rollup(self, year_counts):
 		generation_counts = {generation: year_counts[(year_counts.index <= genmax)
@@ -90,5 +103,3 @@ class GenerationFromName(object):
 		generation_counts['_other'] = year_counts.sum() - sum(generation_counts.values())
 		to_ret = pd.Series(generation_counts)
 		return to_ret
-
-
