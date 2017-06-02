@@ -1,5 +1,5 @@
-# AgeFromName 0.0.2
-A tool for predicting someone's age or generation given their name and assigned sex at birth, 
+# AgeFromName 0.0.3
+A tool for predicting someone's age, gender, or generation given their name and assigned sex at birth, 
 assuming they were born in the US.
 
 Feel free to use the Gitter community [gitter.im/agefromname](https://gitter.im/agefromname/Lobby) for help or to discuss the project.   
@@ -25,6 +25,21 @@ To use, first initialize the finder
 >>> from agefromname import AgeFromName
 >>> age_from_name = AgeFromName()
 ```
+
+You find the probability of someone's gender based on their first name and optionally,
+ the current year and/or their minimum age.  
+
+```pythonstub
+>>> age_from_name.prob_male('taylor')
+0.24956599946849847
+>>> age_from_name.prob_male('taylor', minimum_age=50)
+0.9572157723373936
+>>> age_from_name.prob_male('taylor', current_year=1930)
+1.0
+>>> age_from_name.prob_male('taylor', current_year=2010, minimum_age=30)
+0.8497712563439375
+```
+
 
 Now you can use this to get the mode of someone's age, give their first name and 
 gender.  Note that their gender should be a single letter, 'm' or 'f' (case-insensitive), and that the

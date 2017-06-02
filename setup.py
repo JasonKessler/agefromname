@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(name='agefromname',
-      version='0.0.2',
-      description='Predict how old someone is from their name and gender, using the baby name data from the US Social Security Administration.',
+      version='0.0.3',
+      description='Predict how old someone is from their name and gender, using the baby name data from the US Social Security Administration. Predicts gender from name as well.',
       url='https://github.com/JasonKessler/agefromname',
       author='Jason Kessler',
       author_email='jason.kessler@gmail.com',

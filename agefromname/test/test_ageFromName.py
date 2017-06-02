@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import pandas as pd
 
-from agefromname.age_from_name import AgeFromName
+from agefromname.age_from_name import AgeFromName, InvalidSexException
 
 
 class TestBirthYearPredictor(TestCase):
@@ -42,6 +42,32 @@ class TestBirthYearPredictor(TestCase):
 		                  1890, 1891, 1892, 1893, 1894, 1895, 1896, 1897, 1898, 1899,
 		                  1900, 1901})
 		self.assertAlmostEqual(sum(actual), 9669, places=0)
+
+	def test_prob_male(self):
+		self.assertAlmostEqual(self.birth_year_predictor.prob_male('alex'), 0.96568, places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_male('bill', minimum_age=90), 0.9820278, places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_male('taylor', current_year=1930), 1.0, places=4)
+
+	def test_get_estimated_counts_None(self):
+		actual = self.birth_year_predictor.get_estimated_counts('alex', None, 1940)
+		self.assertEqual(type(actual), pd.Series)
+		self.assertEqual(actual.name, 'estimated_count')
+		self.assertEqual(set(actual.keys()),
+		                 {1880, 1881, 1882, 1883, 1884, 1885, 1886, 1887, 1888, 1889,
+		                  1890, 1891, 1892, 1893, 1894, 1895, 1896, 1897, 1898, 1899,
+		                  1900, 1901, 1902, 1903, 1904, 1905, 1906, 1907, 1908, 1909,
+		                  1910, 1911, 1912, 1913, 1914, 1915, 1916, 1917, 1918, 1919,
+		                  1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929,
+		                  1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939,
+		                  1940})
+		self.assertAlmostEqual(sum(actual), 24330.212406742125, places=0)
+
+	def test_get_estimated_counts_bad_gender(self):
+		with self.assertRaises(InvalidSexException):
+			self.birth_year_predictor.get_estimated_counts('nancy', 'E', 1901)
+		with self.assertRaises(InvalidSexException):
+			self.birth_year_predictor.get_estimated_counts('nancy', 3, 1901)
+		self.birth_year_predictor.get_estimated_counts('nancy')
 
 	def test_get_estimated_counts_minimum_age(self):
 		min_age_30 = self.birth_year_predictor.get_estimated_counts('nancy', 'f',
