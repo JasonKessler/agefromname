@@ -36,8 +36,12 @@ class AgeFromName(object):
 		'''
 		male_count = self.get_estimated_counts(first_name, 'm', current_year, minimum_age).sum()
 		female_count = self.get_estimated_counts(first_name, 'f', current_year, minimum_age).sum()
+		if male_count + female_count == 0: return 0.5
 		prob = male_count*1./(male_count + female_count)
 		return prob
+
+	def prob_female(self, first_name, current_year = datetime.now().year, minimum_age=0):
+		return 1 - self.prob_male(first_name, current_year, minimum_age)
 
 	def get_estimated_counts(self,
 	                         first_name,
