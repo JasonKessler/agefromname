@@ -1,4 +1,4 @@
-# AgeFromName 0.0.4
+# AgeFromName 0.0.5
 A tool for predicting someone's age, gender, or generation given their name and assigned sex at birth, 
 assuming they were born in the US.
 
@@ -8,9 +8,21 @@ Feel free to use the Gitter community [gitter.im/agefromname](https://gitter.im/
 
 `$ pip install agefromname`
 
+## Caveat Usor
+
+There are some objections to using this data to perform age and gender imputation.  The Social Security Administration 
+records the 1,000 most common male and female baby names + birth counts each year.  These may not be fully 
+representative of the entire population, and may not work as well for people whose names aren't historically
+ common among those born in the US or other groups.  
+
+Various objections to this line of research exist, for example [Oliver Keyes'](https://ironholds.org/names-gender/). 
+
+I am working to expand the scope of the package to address some of these issues and to provide prediction intervals 
+instead of point estimates. 
+
 ## Overview
 
-This more or less apes the approach of FiveThirtyEight's ["How to Tell if Someone's  Age
+This more or less apes the approach of FiveThirtyEight's ["How to Tell if Someone's Age
 When All you Know Is Her Name"](https://fivethirtyeight.com/features/how-to-tell-someones-age-when-all-you-know-is-her-name/) article.
  
 It includes data collected scraped from the Social Security 
