@@ -1,4 +1,4 @@
-# AgeFromName 0.0.5 
+# AgeFromName 0.0.6
 A tool for predicting someone's age, gender, or generation given their name and assigned sex at birth, 
 assuming they were born in the US.
 
@@ -54,6 +54,27 @@ You find the probability of someone's gender based on their first name and optio
 0.8497712563439375
 ```
 
+You can even plot the plot, given a current year, the probability someone named Kelsey would be female:
+ 
+```pythonstub
+>>> (pd.DataFrame([{'year': year, 
+                'P(Male)': age_from_name.prob_male('kelsey', current_year=year)}
+               for year in range(1930, 2015)])
+ .set_index('year')
+ .plot())
+```
+![The decreasing probability Kelsey is a male](https://jasonkessler.github.io/kelseyplot.png)
+
+One can perform this computation in bulk for all names.  Here, we can see a 95% confidence intervals
+ of how likely people over 18 in 1993 were females given their names:
+```pythonstub
+>>> age_from_name.get_all_name_female_prob(current_year=1993, minimum_age=18).iloc[:3]
+                  hi        lo  prob
+first_name
+aage        0.648197  0.000000   0.0
+aagot       1.000000  0.380786   1.0
+aamir       0.398189  0.000000   0.0
+```
 
 Now you can use this to get the mode of someone's age, give their first name and 
 gender.  Note that their gender should be a single letter, 'm' or 'f' (case-insensitive), and that the

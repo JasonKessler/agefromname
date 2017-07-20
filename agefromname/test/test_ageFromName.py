@@ -17,6 +17,18 @@ class TestBirthYearPredictor(TestCase):
 		self.assertEqual(birth_year_predictor.argmax('jeNNifer', 'F', 2017), 1972)
 		self.assertEqual(birth_year_predictor.argmax('nancy', 'f', 2017), 1952)
 
+	def test_get_all_name_female_prob(self):
+		gender_prob = self.birth_year_predictor.get_all_name_female_prob()
+		self.assertAlmostEqual(self.birth_year_predictor.prob_female('alex'),
+		                       gender_prob.loc['alex']['prob'],
+		                       places=4)
+
+	def test_get_all_name_male_prob(self):
+		female_prob = self.birth_year_predictor.get_all_name_female_prob()
+		male_prob = self.birth_year_predictor.get_all_name_male_prob()
+		self.assertAlmostEqual((female_prob['prob'] + male_prob['prob']).sum(), len(male_prob))
+
+
 	def test_get_argmax_default(self):
 		self.birth_year_predictor.argmax('nancy', 'f')
 

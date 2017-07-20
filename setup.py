@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='agefromname',
-      version='0.0.5',
+      version='0.0.6',
       description='Predict how old someone is from their name and gender, using the baby name data from the US Social Security Administration. Predicts gender from name as well.',
       url='https://github.com/JasonKessler/agefromname',
       author='Jason Kessler',
@@ -12,6 +12,7 @@ setup(name='agefromname',
 	      'nose',
 	      'numpy',
 	      'pandas',
+	      'statsmodels',
 	      'beautifulsoup4'
       ],
       package_data={
