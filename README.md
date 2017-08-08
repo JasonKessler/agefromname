@@ -8,18 +8,6 @@ Feel free to use the Gitter community [gitter.im/agefromname](https://gitter.im/
 
 `$ pip install agefromname`
 
-## Caveat Usor
-
-There are some objections to using this data to perform age and gender imputation.  The Social Security Administration 
-records the 1,000 most common male and female baby names + birth counts each year.  These may not be fully 
-representative of the entire population, and may not work as well for people whose names aren't historically
- common among those born in the US or other groups.  
-
-Various objections to this line of research exist, for example [Oliver Keyes'](https://ironholds.org/names-gender/). 
-
-I am working to expand the scope of the package to address some of these issues and to provide prediction intervals 
-instead of point estimates. 
-
 ## Overview
 
 This more or less apes the approach of FiveThirtyEight's ["How to Tell if Someone's Age
@@ -164,4 +152,10 @@ Millenials             652914.233604
 _other                      0.102625
 Name: estimated_count, dtype: float64
 ```
+
+## Caveat Usor
+The Social Security Administration records the 1,000 most common male and female baby names + birth counts each year.  These may not be fully representative of the entire population, and may not work as well for people whose names aren't historically common among those born in the US or other groups. 
+
+Be aware that there are people who have near-dogmatic objections to this sort of analysis, especially using a first name to impute a gender.  
+
 
