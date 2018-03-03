@@ -1,4 +1,4 @@
-# AgeFromName 0.0.6
+# AgeFromName 0.0.7
 A tool for predicting someone's age, gender, or generation given their name and assigned sex at birth, 
 assuming they were born in the US.
 
@@ -39,7 +39,7 @@ To use, first initialize the finder
 ```
 
 You find the probability of someone's gender based on their first name and optionally,
- the current year and/or their minimum age.  
+ the current year, their minimum age, and/or their maximum age.  
 
 ```pythonstub
 >>> age_from_name.prob_male('taylor')
@@ -52,6 +52,8 @@ You find the probability of someone's gender based on their first name and optio
 1.0
 >>> age_from_name.prob_male('taylor', current_year=2010, minimum_age=30)
 0.8497712563439375
+>>> age_from_name.prob_male('taylor', current_year=2010, minimum_age=30, maximum_age=40)
+0.7645011554551521
 ```
 
 You can even plot the plot, given a current year, the probability someone named Kelsey would be female:

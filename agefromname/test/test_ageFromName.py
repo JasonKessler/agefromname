@@ -28,7 +28,6 @@ class TestBirthYearPredictor(TestCase):
 		male_prob = self.birth_year_predictor.get_all_name_male_prob()
 		self.assertAlmostEqual((female_prob['prob'] + male_prob['prob']).sum(), len(male_prob))
 
-
 	def test_get_argmax_default(self):
 		self.birth_year_predictor.argmax('nancy', 'f')
 
@@ -56,14 +55,21 @@ class TestBirthYearPredictor(TestCase):
 		self.assertAlmostEqual(sum(actual), 9669, places=0)
 
 	def test_prob_male(self):
-		self.assertAlmostEqual(self.birth_year_predictor.prob_male('alex'), 0.96568, places=4)
-		self.assertAlmostEqual(self.birth_year_predictor.prob_male('bill', minimum_age=90), 0.9820278, places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_male('alex'), 0.9656, places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_male('bill', minimum_age=90), 0.9819446677986078, places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_male('bill', maximum_age=20), 1, places=4)
 		self.assertAlmostEqual(self.birth_year_predictor.prob_male('taylor', current_year=1930), 1.0, places=4)
 
 	def test_prob_female(self):
-		self.assertAlmostEqual(self.birth_year_predictor.prob_female('alex'), 1-0.96568, places=4)
-		self.assertAlmostEqual(self.birth_year_predictor.prob_female('bill', minimum_age=90), 1-0.9820278, places=4)
-		self.assertAlmostEqual(self.birth_year_predictor.prob_female('taylor', current_year=1930), 1-1.0, places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_female('alex'), 0.034385169011657335)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_female('bill', minimum_age=90), 1 - 0.9819446677986078,
+		                       places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_female('ariel', maximum_age=20), .808361029618998, places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_female('ariel', minimum_age=20, maximum_age=40),
+		                       .8139418787290704, places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_female('ariel', maximum_age=40),
+		                       .8108087012259286, places=4)
+		self.assertAlmostEqual(self.birth_year_predictor.prob_female('taylor', current_year=1930), 1 - 1.0, places=4)
 
 	def test_get_estimated_counts_None(self):
 		actual = self.birth_year_predictor.get_estimated_counts('alex', None, 1940)
