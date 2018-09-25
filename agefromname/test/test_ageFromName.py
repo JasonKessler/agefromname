@@ -19,14 +19,17 @@ class TestBirthYearPredictor(TestCase):
 
 	def test_get_all_name_female_prob(self):
 		gender_prob = self.birth_year_predictor.get_all_name_female_prob()
+		self.assertAlmostEqual(self.birth_year_predictor.prob_female('aaban'),
+							   gender_prob.loc['aaban']['prob'],
+							   places=4)
 		self.assertAlmostEqual(self.birth_year_predictor.prob_female('alex'),
-		                       gender_prob.loc['alex']['prob'],
-		                       places=4)
+							   gender_prob.loc['alex']['prob'],
+							   places=4)
 
 	def test_get_all_name_male_prob(self):
 		female_prob = self.birth_year_predictor.get_all_name_female_prob()
 		male_prob = self.birth_year_predictor.get_all_name_male_prob()
-		self.assertAlmostEqual((female_prob['prob'] + male_prob['prob']).sum(), len(male_prob))
+		assert all((female_prob['prob'] + male_prob['prob']) > 0.999999)
 
 	def test_get_argmax_default(self):
 		self.birth_year_predictor.argmax('nancy', 'f')

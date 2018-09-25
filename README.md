@@ -1,4 +1,4 @@
-# AgeFromName 0.0.7
+# AgeFromName 0.0.8
 A tool for predicting someone's age, gender, or generation given their name and assigned sex at birth, 
 assuming they were born in the US.
 
